@@ -18,6 +18,13 @@
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
     </div>
-    <div id="chats"></div>
+    <form id="formfield">
+      <input type="text" name="chatInput">
+      <input id="sub" type="submit" value="Submit">
+    </form>
+    <div id="chats">
+      <button onclick='refresh()'>Refresh</button>
+      <ul class ='chatList'></ul>
+    </div>
   </body>
 </html>
