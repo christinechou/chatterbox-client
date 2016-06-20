@@ -31,6 +31,7 @@ $('#formfield').submit(function(e) {
   var inputValue = $('input').val();
   var messageObj = {};
   messageObj.text = inputValue;
+  messageObj.username = name;
   
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
