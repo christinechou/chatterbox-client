@@ -35,9 +35,6 @@ window.refresh = function () {
   
   };
 
-
-
-
 // 3. Function to populate room list drop down
   window.roomList = function() {
     // a. use Ajax call to get room names
@@ -65,7 +62,7 @@ window.refresh = function () {
           $('.mdl-menu').append(link);
 
           // add a button for every room using classes
-          $('.' + item).on('click', function() {
+          $('.mdl-menu__item').on('click', function() {
             // empty the chat list
             $('.chatList').empty();
 
@@ -79,7 +76,6 @@ window.refresh = function () {
 
             // populate the current chat list from a specific room
             filteredResults.forEach(function(msg) {
-              console.log(x);
               appendMessageToPage(msg);
             });
           });
