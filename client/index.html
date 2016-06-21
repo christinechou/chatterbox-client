@@ -12,6 +12,11 @@
     <!-- your scripts -->
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        app.init()
+      });
+    </script>
     <!-- material design css -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
@@ -42,11 +47,14 @@
     <div class="page-content">
     
     <form id="formfield">
-      <input type="text" name="chatInput">
-      <input id="sub" type="submit" value="Submit">
+      <input type="text" value="Message: " class="chatInput">
+      <input type="text" value="Room: " class="roomInput">
+      <!-- <input type=""></input> -->
+      <!-- <input id="sub" type="submit" value="Submit"> -->
     </form>
+    
     <span>Room List</span>
-    <button id="demo-menu-lower-left" class="mdl-button mdl-js-button mdl-button--icon" onclick="roomList()">
+    <button id="demo-menu-lower-left" class="mdl-button mdl-js-button mdl-button--icon" onclick="app.roomList()">
     <i class="material-icons">more_vert</i>
     </button>
 
@@ -54,14 +62,14 @@
         for="demo-menu-lower-left">
     </ul>
 
-      <button onclick='refresh()'>Refresh</button>
-      <ul class ='chatList'></ul>
+      <button onclick='app.fetch()'>Refresh</button>
+      <div id="roomSelect"></div>
+      <ul id ='chats'></ul>
     </div>
 
     </div>
   </main>
 </div>
-
 
 
   </body>

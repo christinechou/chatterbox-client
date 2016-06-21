@@ -1,45 +1,91 @@
 // YOUR CODE HERE:
-$(document).ready(function(e) {
 
-// 1. refreshes chatbox
-window.refresh = function () {
-  // a. empty the chatlist
-  $('.chatList').empty();
-  // b. use ajax call to get message data
-  $.ajax({
-    url: 'https://api.parse.com/1/classes/messages',
-    type: 'GET',
-    contentType: 'application/json',
-    success: function (data) {
-      // for each data object, append to the DOM
-      data.results.forEach(function(datum) {
-        appendMessageToPage(datum);
-      });
-    },
-    error: function (data) {
-      // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-      console.error('chatterbox: Failed to send message', data);
-    }
-  });
-};
+// app.send({username: '~*~*~*~CASPER~*~*~*~', text: 'yaaaaayyyy!', roomname: '<script>console.log("I LOVE TO TROLLLLLLLL")</script>'})
+var app = {
+  server: 'https://api.parse.com/1/classes/messages',
+  init: function() {
+    this.fetch();
+    this.handleSubmit();
+    this.roomList();
+  },
 
-// 2. append a message to the DOM
-  var appendMessageToPage = function (item) {
+  send: function(object) {
+    $.ajax({
+      // This is the url you should use to communicate with the parse API server.
+      url: this.server,
+      type: 'POST',
+      data: JSON.stringify(object),
+      contentType: 'application/json',
+      success: function (data) {
+        console.log('chatterbox: Message sent');
+        console.log(data);
+      },
+      error: function (data) {
+        // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+        console.error('chatterbox: Failed to send message', data);
+      }
+    });
+  },
+
+  handleSubmit: function () {
+    $('#formfield').submit(function(e) {
+      e.preventDefault();
+      var messageObj = {};
+      messageObj.text = $('.chatInput').val();
+      messageObj.username = name;
+      messageObj.roomname = $('.roomInput').val();
+      app.send(messageObj);
+      app.fetch();
+    });
+  },
+
+  // 2. append a message to the DOM
+  addMessage: function (item) {
     // use .text to escape attacks
     var message = item.text;
     var msg = $('<li>').text("username: " + item.username + 
       " message: " + message + 
       " created at:" + item.createdAt + 
       " room: " + item.roomname);
-    $('.chatList').append(msg);
+    $('#chats').append(msg);
   
-  };
+  },
+
+// 1. fetches chatbox
+  fetch: function () {
+    // a. empty the chatlist
+    app.clearMessages();
+    // b. use ajax call to get message data
+    $.ajax({
+      url: this.server,
+      type: 'GET',
+      contentType: 'application/jsonp',
+      success: function (data) {
+        // for each data object, append to the DOM
+        data.results.forEach(function(datum) {
+          app.addMessage(datum);
+        });
+      },
+      error: function (data) {
+        // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+        console.error('chatterbox: Failed to send message', data);
+      }
+    });
+  },
+
+  clearMessages: function() {
+    $('#chats').empty();
+  },
+
+  addRoom: function(string) {
+
+  },
 
 // 3. Function to populate room list drop down
-  window.roomList = function() {
+  roomList: function() {
     // a. use Ajax call to get room names
     $.ajax({
-      url: 'https://api.parse.com/1/classes/messages',
+      url: this.server,
       type: 'GET',
       contentType: 'application/json',
       success: function (data) {
@@ -53,18 +99,21 @@ window.refresh = function () {
 
         // remove any dupplicates
         var uniqRooms = _.uniq(listOfRooms);
+        // console.log(uniqRooms)
         var filteredResults = [];
+        var index = 0;
         
         // for each unique room, create a button on the drop down
         uniqRooms.forEach(function(item) {
           // create a list element
-          var link = "<li class='mdl-menu__item'>" + item + "</li>";
+          var link = $("<li class='mdl-menu__item " + index + "'>");
+          link.text(item);
           $('.mdl-menu').append(link);
 
           // add a button for every room using classes
-          $('.mdl-menu__item').on('click', function() {
+          $("." + index).on('click', function() {
             // empty the chat list
-            $('.chatList').empty();
+            app.clearMessages();
 
             // create a filtered array
             filteredResults = _.filter(data.results, function(datum) {
@@ -76,9 +125,11 @@ window.refresh = function () {
 
             // populate the current chat list from a specific room
             filteredResults.forEach(function(msg) {
-              appendMessageToPage(msg);
+              app.addMessage(msg);
             });
+          // console.log(filteredResults)
           });
+          index++;
         });
       },
       error: function (data) {
@@ -86,34 +137,8 @@ window.refresh = function () {
         console.error('chatterbox: Failed to send message', data);
       }
     });
-  };
+  }
+
+};
 
 
-  $('#formfield').submit(function(e) {
-    var inputValue = $('input').val();
-    var messageObj = {};
-    messageObj.text = inputValue;
-    messageObj.username = name;
-    messageObj.roomname = roomName;
-    
-    $.ajax({
-      // This is the url you should use to communicate with the parse API server.
-      url: 'https://api.parse.com/1/classes/messages',
-      type: 'POST',
-      data: JSON.stringify(messageObj),
-      contentType: 'application/json',
-      success: function (data) {
-        console.log('chatterbox: Message sent');
-        console.log(data);
-      },
-      error: function (data) {
-        // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-        console.error('chatterbox: Failed to send message', data);
-      }
-    });
-
-    e.preventDefault();
-
-  });
-
-});
