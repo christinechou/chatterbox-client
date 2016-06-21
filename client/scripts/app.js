@@ -7,8 +7,9 @@ var app = {
     this.fetch();
     this.handleSubmit();
     this.roomList();
+    $('#chats').on('click', '.username', app.addFriend);
   },
-
+  userFriends: {},
   send: function(object) {
     $.ajax({
       // This is the url you should use to communicate with the parse API server.
@@ -34,6 +35,7 @@ var app = {
       messageObj.text = $('.chatInput').val();
       messageObj.username = name;
       messageObj.roomname = $('.roomInput').val();
+      console.log(messageObj);
       app.send(messageObj);
       app.fetch();
     });
@@ -43,12 +45,20 @@ var app = {
   addMessage: function (item) {
     // use .text to escape attacks
     var message = item.text;
-    var msg = $('<li>').text("username: " + item.username + 
+    var userLink = $('<a>').text(item.username).addClass('username');
+    var msg = $('<li>').text(
       " message: " + message + 
       " created at:" + item.createdAt + 
-      " room: " + item.roomname);
+      " room: " + item.roomname).prepend(userLink);
     $('#chats').append(msg);
-  
+  },
+
+  addFriend: function () {
+    var friend = $( this ).text();
+    console.log(friend);
+    app.userFriends[friend] = friend;
+    console.log($(this));
+    $(this).css('font-weight', 'bold');
   },
 
 // 1. fetches chatbox
@@ -77,8 +87,10 @@ var app = {
     $('#chats').empty();
   },
 
-  addRoom: function(string) {
-
+  addRoom: function(str) {
+    var roomNode = $('<div>');
+    roomNode.text(str);
+    $('#roomSelect').append(str);
   },
 
 // 3. Function to populate room list drop down

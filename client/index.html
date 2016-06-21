@@ -47,10 +47,11 @@
     <div class="page-content">
     
     <form id="formfield">
-      <input type="text" value="Message: " class="chatInput">
-      <input type="text" value="Room: " class="roomInput">
+      <input type="text" placeholder="Message: " class="chatInput" type="submit">
+      <input type="text" placeholder="Room: " class="roomInput" type="submit">
       <!-- <input type=""></input> -->
-      <!-- <input id="sub" type="submit" value="Submit"> -->
+      <br>
+      <input id="sub" type="submit" value="Submit">
     </form>
     
     <span>Room List</span>
@@ -63,8 +64,10 @@
     </ul>
 
       <button onclick='app.fetch()'>Refresh</button>
-      <div id="roomSelect"></div>
-      <ul id ='chats'></ul>
+    <div id="roomSelect"></div>
+    <div id="main">
+    <ul id ='chats'></ul>
+    </div>
     </div>
 
     </div>
