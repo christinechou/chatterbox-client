@@ -8,6 +8,7 @@ var app = {
     this.handleSubmit();
     this.roomList();
     $('#chats').on('click', '.username', app.addFriend);
+    // $('#chats').on('click', '.username', app.fetch);
   },
   userFriends: {},
   send: function(object) {
@@ -19,7 +20,6 @@ var app = {
       contentType: 'application/json',
       success: function (data) {
         console.log('chatterbox: Message sent');
-        console.log(data);
       },
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -35,7 +35,6 @@ var app = {
       messageObj.text = $('.chatInput').val();
       messageObj.username = name;
       messageObj.roomname = $('.roomInput').val();
-      console.log(messageObj);
       app.send(messageObj);
       app.fetch();
     });
@@ -46,8 +45,11 @@ var app = {
     // use .text to escape attacks
     var message = item.text;
     var userLink = $('<a>').text(item.username).addClass('username');
+    if (app.userFriends.hasOwnProperty(item.username)) {
+      userLink.css('font-weight', 'bold');
+    }
     var msg = $('<li>').text(
-      " message: " + message + 
+      " " + message + 
       " created at:" + item.createdAt + 
       " room: " + item.roomname).prepend(userLink);
     $('#chats').append(msg);
@@ -55,10 +57,9 @@ var app = {
 
   addFriend: function () {
     var friend = $( this ).text();
-    console.log(friend);
     app.userFriends[friend] = friend;
-    console.log($(this));
     $(this).css('font-weight', 'bold');
+    app.fetch();
   },
 
 // 1. fetches chatbox
