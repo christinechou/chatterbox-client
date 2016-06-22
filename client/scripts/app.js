@@ -8,6 +8,8 @@ var app = {
     this.handleSubmit();
     this.roomList();
     $('#chats').on('click', '.username', app.addFriend);
+    console.log(jQuery.timeago(new Date()))
+    jQuery.timeago.settings.allowFuture = true;
   },
   userFriends: {},
   send: function(object) {
@@ -49,8 +51,7 @@ var app = {
     }
     var msg = $('<li>').text(
       " " + message + 
-      " created at:" + item.createdAt + 
-      " room: " + item.roomname).prepend(userLink);
+      " room: " + item.roomname).prepend(userLink).append("<p><time class='timeago'>" + jQuery.timeago(item.createdAt) + "</time></p>");
     $('#chats').append(msg);
   },
 
@@ -71,6 +72,7 @@ var app = {
       type: 'GET',
       contentType: 'application/jsonp',
       success: function (data) {
+        console.log(data);
         // for each data object, append to the DOM
         data.results.forEach(function(datum) {
           app.addMessage(datum);
