@@ -8,7 +8,6 @@ var app = {
     this.handleSubmit();
     this.roomList();
     $('#chats').on('click', '.username', app.addFriend);
-    // $('#chats').on('click', '.username', app.fetch);
   },
   userFriends: {},
   send: function(object) {
@@ -119,9 +118,9 @@ var app = {
         // for each unique room, create a button on the drop down
         uniqRooms.forEach(function(item) {
           // create a list element
-          var link = $("<li class='mdl-menu__item " + index + "'>");
+          var link = $("<a class='mdl-navigation__link " + index + "'>");
           link.text(item);
-          $('.mdl-menu').append(link);
+          $('#navdrawer').append(link);
 
           // add a button for every room using classes
           $("." + index).on('click', function() {
@@ -131,16 +130,14 @@ var app = {
             // create a filtered array
             filteredResults = _.filter(data.results, function(datum) {
               if (item === 'General') {
-                return typeof datum.roomname === 'undefined';
+                return typeof datum.roomname === 'undefined' || datum.roomname === '';
               }
               return datum.roomname === item;
             });
-
             // populate the current chat list from a specific room
             filteredResults.forEach(function(msg) {
               app.addMessage(msg);
             });
-          // console.log(filteredResults)
           });
           index++;
         });
@@ -151,7 +148,6 @@ var app = {
       }
     });
   }
-
 };
 
 
